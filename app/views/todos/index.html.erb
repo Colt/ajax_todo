@@ -1,0 +1,42 @@
+<h1>Todo List</h1>
+
+<input type="text">
+<button>Add Todo</button>
+
+<ul>
+	<%@todos.each do |todo| %>
+	<li><%=todo.description%> <span>&times;</span></li>
+	<% end %>
+</ul>
+
+<script type="text/javascript">
+$('button').click(function(){
+	var desc = $('input').val();
+	// console.log(desc);
+
+	data_hash = {
+		"todo":{"description": desc}
+	}
+
+	var request = $.ajax({
+		url: "/todos",
+		type: "POST",
+		data: data_hash,
+		dataType: "json"
+	});
+
+	request.done(function(data){
+		// console.log("DONE FUNCTION");
+		$('ul').append("<li>" + data.description + " <span>&times;</span></li>")
+		console.log(data);
+	})
+
+	request.fail(function(data){
+		console.log("FAIL FUNCTION");
+		$('h1').append("<p> There was an error saving your todo</p>")
+	})
+
+
+
+})
+</script>
