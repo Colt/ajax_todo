@@ -51,6 +51,14 @@ $('ul').click(function(e){
 			dataType: "json"
 		});
 
+		// ALTERNATE REQUEST
+		// var request = $.ajax({
+		// 	url: "/todos/"+id,
+		// 	type: "POST",
+		// 	data: {_method: "delete"},
+		// 	dataType: "json"
+		// });
+
 		request.done(function(data){
 			li.remove();
 		});
@@ -71,6 +79,19 @@ $('ul').click(function(e){
 			data: data_hash,
 			dataType: "json"
 		});
+
+		// ALTERNATE REQUEST
+		// data_hash = {
+		// _method: "patch",
+		// "todo":{"completed":checkbox_value}
+		// }
+		
+		// var request = $.ajax({
+		// 	url: "/todos/"+ id,
+		// 	type: "POST",
+		// 	data: data_hash,
+		// 	dataType: "json"
+		// });
 
 		request.done(function(data){
 			//Don't need to do anything...
