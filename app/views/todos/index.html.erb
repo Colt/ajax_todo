@@ -30,7 +30,7 @@ $('button').click(function(){
 
 	request.done(function(data){
 		// console.log("DONE FUNCTION");
-		$('ul').append("<li>" + data.description + " <span>&times;</span></li>")
+		$('ul').append("<li data-todo-id='"+ data.id +"'>" +'<input type="checkbox">'+ data.description + " <span>&times;</span></li>")
 		console.log(data);
 	})
 
@@ -40,42 +40,42 @@ $('button').click(function(){
 	});
 });
 
-$('span').click(function(){
-	var li = $(this).parent();
-	var id = li.data("todo-id")
+$('ul').click(function(e){
+	// console.log(e.target);
+	if($(e.target).is("span")){
+		var li = $(e.target).parent();
+		var id = li.data("todo-id");
+		var request = $.ajax({
+			url: "/todos/"+id,
+			type: "DELETE",	
+			dataType: "json"
+		});
 
-	var request = $.ajax({
-		url: "/todos/"+id,
-		type: "DELETE",
-		dataType: "json"
-	});
-
-	request.done(function(data){
-		li.remove();
-	})
-})
-
-
-// $('.myCheckbox').prop('checked', true);
-$("input:checkbox").click(function(){
-	var li = $(this).parent();
-	var id = li.data("todo-id");
-	var checkbox_value = $(this).is(':checked');
-	console.log(checkbox_value);
-
-	data_hash = {
-		"todo":{"completed":checkbox_value}
+		request.done(function(data){
+			li.remove();
+		});
 	}
 
-	var request = $.ajax({
-		url: "/todos/"+ id,
-		type: "PATCH",
-		data: data_hash,
-		dataType: "json"
-	});
-	request.done(function(data){
-		console.log(data)
-	})
-	// console.log(this.checked)
+	if($(e.target).is("input")){
+		var li = $(e.target).parent();
+		var id = li.data("todo-id");
+		var checkbox_value = $(e.target).is(':checked');
+		
+		data_hash = {
+		"todo":{"completed":checkbox_value}
+		}
+
+		var request = $.ajax({
+			url: "/todos/"+ id,
+			type: "PATCH",
+			data: data_hash,
+			dataType: "json"
+		});
+
+		request.done(function(data){
+			//Don't need to do anything...
+			console.log(data)
+		});
+	}
 })
 </script>
