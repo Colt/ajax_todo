@@ -5,7 +5,10 @@
 
 <ul>
 	<%@todos.each do |todo| %>
-	<li><%=todo.description%> <span>&times;</span></li>
+	<li data-todo-id="<%= todo.id %>">  <input type="checkbox" <%if todo.completed%>checked<%end%>>
+	<%=todo.description%> 
+	<span>&times;</span>
+	</li>
 	<% end %>
 </ul>
 
@@ -34,9 +37,45 @@ $('button').click(function(){
 	request.fail(function(data){
 		console.log("FAIL FUNCTION");
 		$('h1').append("<p> There was an error saving your todo</p>")
+	});
+});
+
+$('span').click(function(){
+	var li = $(this).parent();
+	var id = li.data("todo-id")
+
+	var request = $.ajax({
+		url: "/todos/"+id,
+		type: "DELETE",
+		dataType: "json"
+	});
+
+	request.done(function(data){
+		li.remove();
 	})
+})
 
 
+// $('.myCheckbox').prop('checked', true);
+$("input:checkbox").click(function(){
+	var li = $(this).parent();
+	var id = li.data("todo-id");
+	var checkbox_value = $(this).is(':checked');
+	console.log(checkbox_value);
 
+	data_hash = {
+		"todo":{"completed":checkbox_value}
+	}
+
+	var request = $.ajax({
+		url: "/todos/"+ id,
+		type: "PATCH",
+		data: data_hash,
+		dataType: "json"
+	});
+	request.done(function(data){
+		console.log(data)
+	})
+	// console.log(this.checked)
 })
 </script>
